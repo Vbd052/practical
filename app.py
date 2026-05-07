@@ -1,10 +1,23 @@
-from flask import Flask
+import os
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-@app.route("/")
+
+@app.get("/")
 def home():
-    return "Hello! My PaaS Application is Running on Render 🚀"
+    return jsonify(
+        message="Hello! My PaaS Application is Running on Render 🚀",
+        status="ok",
+    )
+
+
+@app.get("/health")
+def health():
+    return "OK", 200
+
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    # Use the platform-provided port when available (common on PaaS providers)
+    port = int(os.environ.get("PORT", "10000"))
+    app.run(host="0.0.0.0", port=port)
